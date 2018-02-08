@@ -63,9 +63,9 @@ Using your uncurry function, define uncurried plus and times
 functions.
 ......................................................................*)
 
-let plus = uncurry ( + )
+let plus : int -> int -> int = uncurry ( + )
 
-let times = uncurry ( * )
+let times : int -> int -> int = uncurry ( * )
 
 (*......................................................................
 Exercise 3: Recall the prods function from Lab 1:
@@ -177,9 +177,9 @@ Exercise 8: Now rewrite min_option and max_option using the higher-order
 function calc_option. Call them min_option_2 and max_option_2.
 ......................................................................*)
   
-let min_option_2 = calc_option min
+let min_option_2 : 'a option -> 'a option -> 'a option = calc_option min
      
-let max_option_2 = calc_option max
+let max_option_2 : 'a option -> 'a option -> 'a option = calc_option max
 
 (*......................................................................
 Exercise 9: Now that we have calc_option, we can use it in other
@@ -189,7 +189,7 @@ AND of two bool options, or None if both are None. If exactly one is
 None, return the other.
 ......................................................................*)
   
-let and_option = calc_option ( && )
+let and_option : bool option -> bool option -> bool option = calc_option ( && )
   
 (*......................................................................
 Exercise 10: In Lab 1, you implemented a function zip that takes two
