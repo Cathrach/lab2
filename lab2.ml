@@ -63,9 +63,9 @@ Using your uncurry function, define uncurried plus and times
 functions.
 ......................................................................*)
 
-let plus : int -> int -> int = uncurry ( + )
+let plus : (int * int) -> int = uncurry ( + )
 
-let times : int -> int -> int = uncurry ( * )
+let times : (int * int) -> int = uncurry ( * )
 
 (*......................................................................
 Exercise 3: Recall the prods function from Lab 1:
