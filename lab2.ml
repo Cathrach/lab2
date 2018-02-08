@@ -44,9 +44,11 @@ To think about before you start coding:
 Now implement the two functions curry and uncurry.
 ......................................................................*)
 
-let curry = fun _ -> failwith "curry not implemented" ;;
-     
-let uncurry = fun _ -> failwith "uncurry not implemented" ;;
+let curry (f : ('a * 'b) -> 'c) : 'a -> 'b -> 'c =
+  (fun x y -> f (x, y))
+
+let uncurry (f : 'a -> 'b -> 'c) : ('a * 'b) -> 'c =
+  (fun (x, y) -> f x y)
 
 (*......................................................................
 Exercise 2: OCaml's built in binary operators, like ( + ) and ( * ) are
@@ -61,12 +63,10 @@ Using your uncurry function, define uncurried plus and times
 functions.
 ......................................................................*)
 
-let plus =
-  fun _ -> failwith "plus not implemented"
-     
-let times =
-  fun _ -> failwith "times not implemented" ;;
-  
+let plus = uncurry ( + )
+
+let times = uncurry ( * )
+
 (*......................................................................
 Exercise 3: Recall the prods function from Lab 1:
 
@@ -79,8 +79,8 @@ Now reimplement prods using map and your uncurried times function. Why
 do you need the uncurried times function?
 ......................................................................*)
 
-let prods =
-  fun _ -> failwith "prods not implemented" ;; 
+let prods : (int * int) list -> int list =
+  List.map times
 
 (*======================================================================
 Part 2: Option types
@@ -113,9 +113,15 @@ Reimplement max_list, but this time, it should return an int option
 instead of an int.
 ......................................................................*)
 
-let max_list (lst : int list) : int option =
-  failwith "max_list not implemented" ;;
-  
+let rec max_list (lst : int list) : int option =
+  match lst with
+  | [] -> None
+  | [h] -> Some h
+  | h::t ->
+      match max_list t with
+      | Some x -> Some (max h x)
+      | None -> raise (Invalid_argument "max_list")
+
 (*......................................................................
 Exercise 5: Write a function to return the smaller of two int options,
 or None if both are None. If exactly one argument is None, return the
@@ -124,8 +130,11 @@ useful.
 ......................................................................*)
 
 let min_option (x : int option) (y : int option) : int option =
-  failwith "min_option not implemented" ;;
-     
+  match x, y with
+  | None, None -> None
+  | None, Some a | Some a, None -> Some a
+  | Some a, Some b -> Some (min a b)
+ 
 (*......................................................................
 Exercise 6: Write a function to return the larger of two int options, or
 None if both are None. If exactly one argument is None, return the
@@ -133,7 +142,10 @@ other.
 ......................................................................*)
 
 let max_option (x : int option) (y : int option) : int option =
-  failwith "max_option not implemented" ;;
+  match x, y with
+  | None, None -> None
+  | None, Some a | Some a, None -> Some a
+  | Some a, Some b -> Some (max a b)
 
 (*======================================================================
 Part 3: Polymorphism practice
@@ -153,19 +165,21 @@ result appropriately returned.
 What is calc_option's function signature? Implement calc_option.
 ......................................................................*)
 
-let calc_option =
-  fun _ -> failwith "calc_option not implemented" ;;
+let calc_option (f : 'a -> 'a -> 'a) (x : 'a option) (y : 'a option) : 'a
+option =
+  match x, y with
+  | None, None -> None
+  | None, Some a | Some a, None -> Some a
+  | Some a, Some b -> Some (f a b)
      
 (*......................................................................
 Exercise 8: Now rewrite min_option and max_option using the higher-order
 function calc_option. Call them min_option_2 and max_option_2.
 ......................................................................*)
   
-let min_option_2 =
-  fun _ -> failwith "min_option_2 not implemented" ;;
+let min_option_2 = calc_option min
      
-let max_option_2 =
-  fun _ -> failwith "max_option_2 not implemented" ;;
+let max_option_2 = calc_option max
 
 (*......................................................................
 Exercise 9: Now that we have calc_option, we can use it in other
@@ -175,8 +189,7 @@ AND of two bool options, or None if both are None. If exactly one is
 None, return the other.
 ......................................................................*)
   
-let and_option =
-  fun _ -> failwith "and_option not implemented" ;;
+let and_option = calc_option ( && )
   
 (*......................................................................
 Exercise 10: In Lab 1, you implemented a function zip that takes two
@@ -195,8 +208,11 @@ type of the result? Did you provide full typing information in the
 first line of the definition?
 ......................................................................*)
 
-let zip_exn =
-  fun _ -> failwith "zip_exn not implemented" ;;
+let rec zip_exn (x : 'a list) (y : 'b list) : ('a * 'b) list =
+  match x, y with
+  | [], [] -> []
+  | xhd :: xtl, yhd :: ytl -> (xhd, yhd) :: (zip_exn xtl ytl)
+  | _ -> raise (Invalid_argument "zip_exn")
 
 (*......................................................................
 Exercise 11: Another problem with the implementation of zip_exn is that,
@@ -207,8 +223,22 @@ generate an alternate solution without this property?
 Do so below in a new definition of zip.
 ......................................................................*)
 
-let zip =
-  fun _ -> failwith "zip not implemented" ;;
+let rec zip (x : 'a list) (y : 'b list) : ('a option * 'b option) list =
+  match x, y with
+  | [], [] -> []
+  | xhd :: xtl, yhd :: ytl -> (Some xhd, Some yhd) :: (zip xtl ytl)
+  | hd::tl, [] -> (Some hd, None) :: (zip tl [])
+  | [], hd::tl -> (None, Some hd) :: (zip [] tl)
+
+let rec other_zip (x : 'a list) (y : 'b list) : ('a * 'b) list option =
+  match x, y with
+  | [], [] -> Some []
+  | xhd :: xtl, yhd :: ytl ->
+      (match other_zip xtl ytl with
+      | None -> None
+      | Some l -> Some ((xhd, yhd)::l))
+  | _ -> None
+
 
 (*====================================================================
 Part 4: Factoring out None-handling
@@ -241,7 +271,9 @@ adjusted for the result type. Implement the maybe function.
 ......................................................................*)
   
 let maybe (f : 'a -> 'b) (x : 'a option) : 'b option =
-  failwith "maybe not implemented" ;; 
+  match x with
+  | None -> None
+  | Some a -> Some (f a)
 
 (*......................................................................
 Exercise 13: Now reimplement dotprod to use the maybe function. (The
@@ -255,14 +287,18 @@ let sum : int list -> int =
   List.fold_left (+) 0 ;;
 
 let dotprod (a : int list) (b : int list) : int option =
-  failwith "dot_prod not implemented" ;; 
+  maybe sum (maybe prods (other_zip a b))
 
 (*......................................................................
 Exercise 14: Reimplement zip along the same lines, in zip_2 below. 
 ......................................................................*)
+let cons (x : 'a) (xs : 'a list) : 'a list = x :: xs
 
 let rec zip_2 (x : int list) (y : int list) : ((int * int) list) option =
-  failwith "zip_2 not implemented" ;;
+  match x, y with
+  | [], [] -> Some []
+  | xhd :: xtl, yhd :: ytl -> maybe (cons (xhd, yhd)) (zip_2 xtl ytl)
+  | _ -> None
 
 (*......................................................................
 Exercise 15: For the energetic, reimplement max_list along the same
@@ -271,7 +307,10 @@ function always passes along the None.
 ......................................................................*)
 
 let rec max_list_2 (lst : int list) : int option =
-  failwith "max_list not implemented" ;; 
+  match lst with
+  | [] -> None
+  | [h] -> Some h
+  | h::t -> maybe (max h) (max_list_2 t)
 
 (*======================================================================
 Part 5: Record types

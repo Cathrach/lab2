@@ -1,0 +1,23 @@
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+and_option	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let and_option = calc_option ( && )$/;"	v	language:OCaml
+calc_option	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let calc_option (f : 'a -> 'a -> 'a) (x : 'a option) (y : 'a option) : 'a$/;"	v	language:OCaml
+college	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let college = $/;"	v	language:OCaml
+cons	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let cons (x : 'a) (xs : 'a list) : 'a list = x :: xs$/;"	v	language:OCaml
+course	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^                    course : string } ;;$/;"	r	language:OCaml	type:enrollment
+curry	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let curry (f : ('a * 'b) -> 'c) : 'a -> 'b -> 'c =$/;"	v	language:OCaml
+enrollment	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^type enrollment = { name : string;$/;"	t	language:OCaml
+id	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^                    id : int;$/;"	r	language:OCaml	type:enrollment
+Lab2	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^(* $/;"	M	language:OCaml
+max_list	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let rec max_list (lst : int list) : int option =$/;"	v	language:OCaml
+max_list_2	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let rec max_list_2 (lst : int list) : int option =$/;"	v	language:OCaml
+max_option	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let max_option (x : int option) (y : int option) : int option =$/;"	v	language:OCaml
+max_option_2	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let max_option_2 = calc_option max$/;"	v	language:OCaml
+maybe	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let maybe (f : 'a -> 'b) (x : 'a option) : 'b option =$/;"	v	language:OCaml
+min_option	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let min_option (x : int option) (y : int option) : int option =$/;"	v	language:OCaml
+min_option_2	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let min_option_2 = calc_option min$/;"	v	language:OCaml
+name	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^type enrollment = { name : string;$/;"	r	language:OCaml	type:enrollment
+other_zip	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let rec other_zip (x : 'a list) (y : 'b list) : ('a * 'b) list option =$/;"	v	language:OCaml
+sum	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let sum : int list -> int =$/;"	v	language:OCaml
+zip	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let rec zip (x : 'a list) (y : 'b list) : ('a option * 'b option) list =$/;"	v	language:OCaml
+zip_2	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let rec zip_2 (x : int list) (y : int list) : ((int * int) list) option =$/;"	v	language:OCaml
+zip_exn	/Users/serinahu/Documents/CS51/labs/lab2/lab2.ml	/^let rec zip_exn (x : 'a list) (y : 'b list) : ('a * 'b) list =$/;"	v	language:OCaml
