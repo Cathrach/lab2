@@ -176,10 +176,8 @@ option =
 Exercise 8: Now rewrite min_option and max_option using the higher-order
 function calc_option. Call them min_option_2 and max_option_2.
 ......................................................................*)
-  
-let min_option_2 : 'a option -> 'a option -> 'a option = calc_option min
-     
-let max_option_2 : 'a option -> 'a option -> 'a option = calc_option max
+let min_option_2 (x : 'a option) (y : 'a option) : 'a option = calc_option min x y
+let max_option_2 (x : 'a option) (y : 'a option) : 'a option = calc_option max x y
 
 (*......................................................................
 Exercise 9: Now that we have calc_option, we can use it in other
@@ -358,7 +356,7 @@ For example:
 let transcript (enrollments : enrollment list)
                (student : int)
              : enrollment list =
-  failwith "transcript not implemented" ;;
+  List.filter (fun r -> r.id = student) enrollments
   
 (*......................................................................
 Exercise 17: Define a function called ids that takes an enrollment
@@ -372,7 +370,7 @@ For example:
 ......................................................................*)
 
 let ids (enrollments: enrollment list) : int list =
-  failwith "ids not implemented" ;;
+  List.sort_uniq ( - ) (List.map (fun r -> r.id) enrollments)
   
 (*......................................................................
 Exercise 18: Define a function called verify that determines whether all
@@ -383,6 +381,12 @@ For example:
 # verify college ;;
 - : bool = false
 ......................................................................*)
+let all_same (l : 'a list) : bool =
+  match l with
+  | [] -> true
+  | h::t -> List.for_all ( ( = ) h) l
 
 let verify (enrollments : enrollment list) : bool =
-  failwith "verify not implemented" ;;
+  List.fold_left (fun curr id ->
+    curr && all_same (List.map (fun r -> r.name) (transcript enrollments id)))
+  true (ids enrollments)
